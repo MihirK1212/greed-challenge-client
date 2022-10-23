@@ -29,6 +29,7 @@ app.secret_key = SECRET_KEY
 
 
 db = SQLAlchemy(app)
+db.create_all()
 
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
