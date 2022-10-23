@@ -282,5 +282,4 @@ def show_result(game_id):
     return render_template('result.html',game_id=game_id,result=result)
 
 if __name__ == "__main__":
-    db.create_all()
     app.run(debug=True,port=PORT)
