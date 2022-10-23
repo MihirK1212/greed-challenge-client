@@ -23,7 +23,7 @@ if DEV == 'True':
     app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 else:
     app.debug = False
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://lgsjpdlnonitsu:af86d410492325ed8fe6cc92164f9945c08f619204bc44fcdb04283fc1086036@ec2-52-70-45-163.compute-1.amazonaws.com:5432/dcjom0hoefr7df'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://lgsjpdlnonitsu:af86d410492325ed8fe6cc92164f9945c08f619204bc44fcdb04283fc1086036@ec2-52-70-45-163.compute-1.amazonaws.com:5432/dcjom0hoefr7df'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = SECRET_KEY
