@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script type="text/javascript" src="{{ url_for('static', filename='user_game_play.js') }}"></script>
+    {% if waiting == true %}
+        waiting for {{game_id}} to end
+    {% else %}
+        <form action="/user/game_play" method="POST">
+            <input type="number" name="number_chosen" placeholder="Choose a number">
+            <button type="submit">Submit</button>
+        </form>
+    {% endif %}
+</body>
+</html>

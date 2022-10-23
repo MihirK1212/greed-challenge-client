@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script type="text/javascript" src="{{ url_for('static', filename='admin_game_play.js') }}"></script>
+    
+    <div>
+        Current Game ID : 
+        <div id="game_id">{{current_game.game_id}}</div>
+    </div>
+
+    {{current_game}}
+    <button id="endbutton">End Game</button>
+</body>
+</html>
