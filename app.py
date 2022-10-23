@@ -12,17 +12,17 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 ADMIN_USERNAME = os.getenv('ADMIN_USERNAME')
 ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD')
 PORT = os.getenv('PORT')
+DEV = os.getenv('DEV')
 
 app = Flask(__name__)
 
-ENV = 'dev'
 
-if ENV == 'dev':
+if DEV == 'True':
     app.debug = True
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgresiitisql@localhost/luckydraw'
 else:
     app.debug = False
-    app.config['SQLALCHEMY_DATABASE_URI'] = ''
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://lgsjpdlnonitsu:af86d410492325ed8fe6cc92164f9945c08f619204bc44fcdb04283fc1086036@ec2-52-70-45-163.compute-1.amazonaws.com:5432/dcjom0hoefr7df'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = SECRET_KEY
