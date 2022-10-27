@@ -240,6 +240,32 @@ def admin_game_play():
 
     return render_template('admin_game_play.html',current_game=session.get('current_game',{'game_id':-1,'game_end':True}))
 
+@app.route("/admin/game_end" , methods=['GET','POST'])
+def game_end():
+    if request.method == 'POST':
+        try:
+            current_game=session.get('current_game',{'game_id':-1,'game_end':True})
+            game_id = request.form['game_id']
+            
+            print("game_id in end ",game_id)
+
+            if current_game['game_id']==game_id:
+                admin_end_game(game_id)
+                return redirect(f'/admin/result/{game_id}')
+        except Exception as E:
+            print(E)
+            pass
+
+    return redirect('/clear_session')
+
+@app.route('/admin/result/<string:game_id>' , methods=['GET','POST'])
+def show_result(game_id):
+
+    session['current_game'] = {'game_id':-1,'game_end':True}
+
+    result = get_result(game_id)
+    return render_template('result.html',game_id=game_id,result=result)
+
 @app.route("/clear_session",methods=['GET','POST'])
 def clear_session():
 
@@ -256,30 +282,7 @@ def clear_session():
 
     return redirect('/')
 
-@app.route('/game_end' , methods=['GET','POST'])
-def game_end():
-    if request.method == 'POST':
-        try:
-            current_game=session.get('current_game',{'game_id':-1,'game_end':True})
-            game_id = str(request.form['game_id'])
 
-
-            if current_game['game_id']==game_id:
-                admin_end_game(game_id)
-                return "success"
-        except Exception as E:
-            print(E)
-            pass
-
-    return "fail"
-
-@app.route('/result/<string:game_id>' , methods=['GET','POST'])
-def show_result(game_id):
-
-    session['current_game'] = {'game_id':-1,'game_end':True}
-
-    result = get_result(game_id)
-    return render_template('result.html',game_id=game_id,result=result)
 
 if __name__ == "__main__":
     app.run(debug=True,port=PORT)
