@@ -11,15 +11,18 @@
     
     <div>
         Current Game ID : 
-        <div id="game_id">{{current_game.game_id}}</div>
+        <div id="game_id">{{current_game.game_id}}</div> <br/>
+        Current Round Num : 
+        <div id="round_num">{{current_game.round_num}}</div> <br/>
     </div>
-
+    <br/>
     {{current_game}}
-
-
-    <form action="/admin/game_end" method="POST">
+    <br/>
+    
+    <form action="/admin/end_round" method="POST">
         <input type="hidden" name="game_id" value='{{current_game.game_id}}'/>
-        <button type="submit">End Game</button>
+        <input type="hidden" name="round_num" value='{{current_game.round_num}}'/>
+        <button type="submit">End Round and View Result</button>
     </form>
     
 </body>
