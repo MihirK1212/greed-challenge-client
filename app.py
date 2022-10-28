@@ -15,7 +15,7 @@ ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD')
 PORT = os.getenv('PORT')
 DEV = os.getenv('DEV')
 DATABASE_URL = os.getenv('DATABASE_URL')
-NUM_ROUNDS = 3
+NUM_ROUNDS = 5
 
 app = Flask(__name__)
 
