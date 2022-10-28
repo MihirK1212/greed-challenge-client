@@ -24,6 +24,12 @@
         {% endfor %}
     </ul>
 
+    <br/>
+        <div>
+            <canvas id="myChart" style="max-width:1000px;max-height:1000px;"></canvas>
+        </div>
+    <br/>
+
     {% if is_last_round == true %}
         <form action='/clear_session'>
             <button type="submit">End Game</button>
@@ -34,7 +40,101 @@
         </form>
     {% endif %}
 
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.js"></script>
+    <script>
+
+        var frequency = {
+            1 : 4,
+            2 : 10,
+            3 : 2,
+            4 : 3,
+            5 : 9
+        }
+
+        //var frequency = JSON.parse('{{ frequency|tojson }}')
+
+        var numbers_chosen = []
+        var points_earned = []
+
+        for(number_chosen in frequency)
+        {
+            var freq = parseInt(frequency[number_chosen],10)
+
+            if(freq==0){continue;}
+
+            numbers_chosen.push(number_chosen)
+            points_earned.push((parseFloat(number_chosen))/(parseFloat(freq)))
+        }
+
+        var sum = 0;
+        for( var i = 0; i < points_earned.length; i++ ){
+            sum += parseInt( points_earned[i], 10 ); //don't forget to add the base
+        }
+        
+        min_points = Math.min.apply(Math , points_earned)
+        average_points = sum/points_earned.length;
+        max_points = Math.max.apply(Math , points_earned)
+
+        for(number_chosen in frequency)
+        {
+            var freq = parseInt(frequency[number_chosen],10)
+
+            if(freq==0){
+                numbers_chosen.push(number_chosen)
+                points_earned.push(0)
+            }
+        }
+
+        new Chart("myChart", {
+            type: "bar",
+            data: {
+                labels : numbers_chosen,
+                datasets : [
+                    {
+                        backgroundColor : function(context) {
+                            const index = context.dataIndex;
+                            const value = context.dataset.data[index];
+
+                            if(value==max_points){
+                                return "#8CF170";
+                            }
+                            else if(value==min_points){
+                                return "#EB7126";
+                            }
+                            else if(value>average_points){
+                                return "#EDFB77"
+                            }
+                            else{
+                                return "#F4C942"
+                            }
+                        },
+                        data : points_earned
+                    }
+                ]
+            },
+            options:{
+                plugins: {
+                    legend: {
+                      display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                          display: true,
+                          text: 'Number Chosen'
+                        }
+                    },
+                    y: {
+                      title: {
+                        display: true,
+                        text: 'Points Earned'
+                      }
+                    }
+                }  
+            }
+        });
+    </script>
 
 </body>
 </html>

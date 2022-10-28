@@ -6,6 +6,7 @@ from datetime import datetime , timedelta
 from flask_session import Session
 from dotenv import load_dotenv
 import os
+import random
 
 load_dotenv()
 
@@ -126,22 +127,28 @@ def admin_end_round(game_id,round_num):
     except:
         return 
 
-def get_result(game_id,round_num):
+def get_result(game_id,round_num,reviewing):
     
     freq = dict()
     choices = Choice.query.filter_by(game_id=game_id,round_num=round_num).all()
     for choice in choices:
         freq[choice.number_chosen] = freq.get(choice.number_chosen,0) + 1
 
-    for choice in choices:
-        
-        username = choice.username
-        number_chosen = choice.number_chosen
-        f = freq[number_chosen]
+    if not reviewing:
+        for choice in choices:
+            
+            username = choice.username
+            number_chosen = choice.number_chosen
+            f = freq[number_chosen]
 
-        user = UserSession.query.filter_by(username=username,game_id=game_id).first()
-        user.points = user.points + ((float(number_chosen))/(float(f)))
-        db.session.commit()
+            user = UserSession.query.filter_by(username=username,game_id=game_id).first()
+            user.points = user.points + ((float(number_chosen))/(float(f)))
+            db.session.commit()
+
+    frequency = dict()
+
+    for i in range(1,101):
+        frequency[i] = freq.get(i,0) + random.randint(0,10)
     
     userlist = UserSession.query.filter_by(game_id=game_id).all()
     ranklist = []
@@ -151,7 +158,7 @@ def get_result(game_id,round_num):
 
     ranklist = sorted(ranklist, key=lambda d: d['points'] , reverse=True) 
 
-    return ranklist[:10]
+    return ranklist[:10] , frequency
 
 db.create_all()
 
@@ -325,11 +332,11 @@ def andmin_round_end():
 @app.route('/admin/result/<string:game_id>/<int:round_num>' , methods=['GET','POST'])
 def admin_result(game_id,round_num):
 
+    reviewing = admin_invalid_round_end(game_id,round_num)
 
-    if admin_invalid_round_end(game_id,round_num):
-        return redirect('/clear_session')
-
-    admin_end_round(game_id,round_num)
+    if not reviewing:
+        admin_end_round(game_id,round_num)
+        
 
     is_last_round = (round_num == NUM_ROUNDS) 
 
@@ -338,9 +345,8 @@ def admin_result(game_id,round_num):
     else:
         session['current_game'] = {'game_id':game_id,'round_num':round_num+1,'game_end':False}
 
-    result = get_result(game_id,round_num)
-    print("got result")
-    return render_template('admin_result.html',game_id=game_id,round_num=round_num,result=result,is_last_round=is_last_round)
+    result , frequency = get_result(game_id,round_num,reviewing)
+    return render_template('admin_result.html',game_id=game_id,round_num=round_num,result=result,frequency=frequency,is_last_round=is_last_round)
 
 
 @app.route("/clear_session",methods=['GET','POST'])
