@@ -14,14 +14,14 @@ ADMIN_USERNAME = os.getenv('ADMIN_USERNAME')
 ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD')
 PORT = os.getenv('PORT')
 DEV = os.getenv('DEV')
-DATABASE_URL = os.getenv('DATABASE_URL')
+DATABASE_URI = os.getenv('DATABASE_URI')
 NUM_ROUNDS = 5
 
 app = Flask(__name__)
 app.debug = (DEV=='True')
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = SECRET_KEY
