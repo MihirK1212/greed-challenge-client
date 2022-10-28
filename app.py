@@ -59,6 +59,7 @@ class UserSession(db.Model):
     __tablename__ = 'usersession'
     id = db.Column(db.Integer, primary_key=True)  
     username = db.Column(db.String(200), nullable = False) 
+    email = db.Column(db.String(50),nullable=False)
     game_id = db.Column(db.String(50), nullable = False)
     points = db.Column(db.Float , nullable = False , default = 0.0)
 
@@ -68,8 +69,8 @@ def user_invalid_game_entry(game_id):
 def user_exists_in_game(username,game_id):
     return UserSession.query.filter_by(username=username,game_id=game_id).first() is not None
     
-def user_add_to_game(username , game_id):
-    new_user = UserSession(username = username , game_id = game_id , points = 0.0)
+def user_add_to_game(username , email , game_id):
+    new_user = UserSession(username = username , email = email , game_id = game_id , points = 0.0)
     db.session.add(new_user)
     db.session.commit()
 
@@ -165,7 +166,7 @@ def user_home():
         if user_exists_in_game(username,game_id):
             return redirect(f'/user/game_play')
 
-        user_add_to_game(username,game_id)
+        user_add_to_game(username,email,game_id)
 
         session['current_user'] = {
             'username' : username,
