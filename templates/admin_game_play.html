@@ -19,7 +19,7 @@
     {{current_game}}
     <br/>
     
-    <form action="/admin/end_round" method="POST">
+    <form action="/admin/round_end" method="POST">
         <input type="hidden" name="game_id" value='{{current_game.game_id}}'/>
         <input type="hidden" name="round_num" value='{{current_game.round_num}}'/>
         <button type="submit">End Round and View Result</button>

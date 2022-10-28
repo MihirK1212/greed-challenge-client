@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    Showing Result for :<br/><br/>
+
+    <div>
+        Current Game ID : 
+        <div id="game_id">{{game_id}}</div> <br/>
+        Current Round Num : 
+        <div id="round_num">{{round_num}}</div> <br/>
+    </div>
+
+    <br/><br/>
+    
+    <ul>
+        {% for user in result %}
+            <li>{{user.username}} , {{user.email}} , {{user.points}}</li>
+        {% endfor %}
+    </ul>
+
+    {% if is_last_round == true %}
+        <form action='/clear_session'>
+            <button type="submit">End Game</button>
+        </form>
+    {% else %}
+        <form action='/admin/game_play' method="POST">
+            <button type="submit">Continue to Next Round</button>
+        </form>
+    {% endif %}
+
+    
+
+</body>
+</html>

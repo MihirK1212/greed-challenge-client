@@ -7,14 +7,13 @@
     <title>Document</title>
 </head>
 <body>
-    <script type="text/javascript" src="{{ url_for('static', filename='user_game_play.js') }}"></script>
-    {% if waiting == true %}
-        waiting for {{game_id}} to end
-    {% else %}
-        <form action="/user/game_play" method="POST">
-            <input type="number" name="number_chosen" placeholder="Choose a number">
-            <button type="submit">Submit</button>
-        </form>
-    {% endif %}
+
+    Game Id : {{game_id}} <br/> 
+    Round Num : {{round_num}} <br/><br/>
+    
+    <form action="/user/game_play" method="POST">
+        <input type="number" name="number_chosen" placeholder="Choose a number">
+        <button type="submit">Submit</button>
+    </form>
 </body>
 </html>
