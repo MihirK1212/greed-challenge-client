@@ -1,6 +1,6 @@
 from pickle import TRUE
 from unittest import result
-from flask import Flask, render_template,session, request,redirect, url_for
+from flask import Flask, render_template,session, request,redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime , timedelta
 from flask_session import Session
@@ -136,9 +136,6 @@ def get_result(game_id,round_num):
     for choice in choices:
         freq[choice.number_chosen] = freq.get(choice.number_chosen,0) + 1
 
-    print(choices)
-    print(freq)
-
     for choice in choices:
         
         username = choice.username
@@ -152,12 +149,9 @@ def get_result(game_id,round_num):
     userlist = UserSession.query.filter_by(game_id=game_id).all()
     ranklist = []
 
-    print(userlist)
-
     for user in userlist:
         ranklist.append(user.__dict__)
 
-    print(ranklist)
     ranklist = sorted(ranklist, key=lambda d: d['points'] , reverse=True) 
 
     return ranklist[:10]
@@ -238,6 +232,8 @@ def user_round_end():
         elif user_valid_round_end(username,game_id,round_num):
             session['current_game'] = {'game_id':game_id,'round_num':round_num+1,'game_end':False}
             return redirect('/user/game_play')
+        else:
+            flash('Please wait for current round to end!')
 
     return render_template('user_round_end.html',game_id=game_id,round_num=round_num,is_last_round=is_last_round)
 

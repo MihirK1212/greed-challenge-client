@@ -7,6 +7,17 @@
     <title>Document</title>
 </head>
 <body>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class=flashes>
+            {% for message in messages %}
+            <p>{{ message }}</p>
+            {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
     Thank you for playing the round! <br/>
     Game Id : {{game_id}} <br/> 
     Round Num : {{round_num}} <br/>
