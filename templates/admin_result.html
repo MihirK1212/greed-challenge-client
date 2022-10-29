@@ -51,29 +51,13 @@
             5 : 9
         }
 
-        //var frequency = JSON.parse('{{ frequency|tojson }}')
+        //var frequency = JSON.parse('{{ frequency|tojson}}')
 
         var numbers_chosen = []
         var points_earned = []
 
-        for(number_chosen in frequency)
-        {
-            var freq = parseInt(frequency[number_chosen],10)
-
-            if(freq==0){continue;}
-
-            numbers_chosen.push(number_chosen)
-            points_earned.push((parseFloat(number_chosen))/(parseFloat(freq)))
-        }
-
-        var sum = 0;
-        for( var i = 0; i < points_earned.length; i++ ){
-            sum += parseInt( points_earned[i], 10 ); //don't forget to add the base
-        }
-        
-        min_points = Math.min.apply(Math , points_earned)
-        average_points = sum/points_earned.length;
-        max_points = Math.max.apply(Math , points_earned)
+        var sum = 0 , min_points = 100000 , max_points = 0
+        var len = 0
 
         for(number_chosen in frequency)
         {
@@ -82,8 +66,20 @@
             if(freq==0){
                 numbers_chosen.push(number_chosen)
                 points_earned.push(0)
+                continue;
             }
+
+            numbers_chosen.push(number_chosen)
+            points_earned.push((parseFloat(number_chosen))/(parseFloat(freq)))
+
+            min_points = Math.min(min_points , points_earned.at(-1))
+            max_points = Math.max(max_points , points_earned.at(-1))
+            sum += points_earned.at(-1)
+            len+=1
         }
+        
+        average_points = sum/len;
+
 
         new Chart("myChart", {
             type: "bar",
