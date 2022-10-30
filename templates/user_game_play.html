@@ -6,14 +6,101 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
+<style>
+    body{
+            background-color: blueviolet;
+            font-family: "Titilium Web";
+           font-size: large;
+           /* color: white; */
+          
+        }
+        .main{
+            /* min-width: 200px; */
+     margin-left: 30%;
+
+     width: 50%;
+     
+     /* margin: auto; */
+     margin-right: 10%;
+     margin: auto;
+     padding-top: 4%;
+     padding-left: 4%;
+     margin-top: 10rem;
+    
+     padding-left: 5%;
+     font-size: 1.5rem;
+     min-width: 250px;
+     height: 30ch;
+     
+     
+     /* border: 3px solid brown; */
+     border-radius: 5px;
+    /* box-shadow: 10px 10px 5px rgb(213, 52, 200); */
+     background-color: rgb(98, 21, 98);
+     color:grey;
+        }
+        .main input{
+            width: 80%;
+            margin-bottom: 5px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .main button{
+            width: 80%;
+           padding: auto;
+          
+        }
+        .hdng h1{
+             font-weight: bolder;
+             color: rgb(57, 0, 57);
+             
+        }
+
+        .foot{
+            width: 30%;
+           margin: auto;
+           margin-top: 20%;
+          
+        }
+        .hdng{
+            background-color: blueviolet;
+            width: 30%;
+          
+            margin: auto;
+            margin-top: 8%;
+            margin-left: 38%;
+     
+     /* margin: auto; */
+     margin-right: 40%;
+           
+        }
+        .hdng h1{
+            font-size: 4rem;
+        }
+        .btnn button{
+            max-height: 150px;
+        }
+        
+</style>
 <body>
+    <div class="main">
 
     Game Id : {{game_id}} <br/> 
     Round Num : {{round_num}} <br/><br/>
     
     <form action="/user/game_play" method="POST">
         <input type="number" name="number_chosen" placeholder="Choose a number">
-        <button type="submit">Submit</button>
+        <button type="submit" class="btn btn-success">Submit</button>
     </form>
+</div>
+
+<footer>
+    <div class="foot">
+        @copyright | terms 
+    </div>
+</footer>
+
 </body>
 </html>
