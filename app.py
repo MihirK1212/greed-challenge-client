@@ -1,5 +1,5 @@
 from pickle import TRUE
-from flask import Flask, render_template, session, request, redirect, flash
+from flask import Flask, jsonify, render_template, session, request, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 from flask_session import Session
@@ -7,16 +7,16 @@ from dotenv import load_dotenv
 from os import getenv
 import random
 import requests
+from sqlalchemy import true
 
 load_dotenv()
 
-SECRET_KEY = getenv("SECRET_KEY")
-ADMIN_USERNAME = getenv("ADMIN_USERNAME")
 ADMIN_PASSWORD = getenv("ADMIN_PASSWORD")
-PORT = getenv("PORT")
+ADMIN_USERNAME = getenv("ADMIN_USERNAME")
 DEV = getenv("DEV")
-DATABASE_URI = getenv("DATABASE_URI")
-NUM_ROUNDS = 5
+NUM_ROUNDS = int(getenv("NUM_ROUNDS"))
+PORT = getenv("PORT")
+SECRET_KEY = getenv("SECRET_KEY")
 SERVER_URL = getenv("SERVER_URL")
 
 app = Flask(__name__)
@@ -30,123 +30,77 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 def user_invalid_game_entry(game_id):
-    res = requests.get(f"{SERVER_URL}/user_invalid_game_entry" , params=dict({"game_id":game_id})).json()
-    return res['flag']
+    try:
+        res = (requests.get(f"{SERVER_URL}/user_invalid_game_entry" , params=dict({"game_id":game_id}))).json()
+        return bool(res['flag'])
+    except Exception as E:
+        return True
 
 def user_exists_in_game(username, game_id):
-    res = (requests.get(f"{SERVER_URL}/user_invalid_game_entry" , params=dict({"game_id":game_id}))).json()
-    return res['flag']
-
+    try:
+        res = (requests.get(f"{SERVER_URL}/user_exists_in_game" , params=dict({"username":username,"game_id":game_id}))).json()
+        return bool(res['flag'])
+    except Exception as E:
+        return True
 
 def user_add_to_game(username, email, game_id):
-    new_user = UserSession(username=username, email=email, game_id=game_id, points=0.0)
-    db.session.add(new_user)
-    db.session.commit()
-
+    try:
+        requests.post(f"{SERVER_URL}/user_add_to_game" , json=dict({"username":username,"email":email,"game_id":game_id}))
+    except Exception as E:
+        return True
 
 def user_invalid_game_play(username, game_id, round_num):
-    res = (requests.get(f"{SERVER_URL}/user_invalid_game_play" , params=dict({"username":username,"game_id":game_id,"round_num":round_num}))).json()
-    return res['flag']
-
+    try:
+        res = (requests.get(f"{SERVER_URL}/user_invalid_game_play" , params=dict({"username":username,"game_id":game_id,"round_num":round_num}))).json()
+        return bool(res['flag'])
+    except Exception as E:
+        return True
 
 def user_add_choice(username, game_id, round_num, number_chosen):
-
-    if (
-        Choice.query.filter_by(
-            username=username, game_id=game_id, round_num=round_num
-        ).first()
-        is not None
-    ):
-        return
-
-    new_choice = Choice(
-        username=username,
-        game_id=game_id,
-        round_num=round_num,
-        number_chosen=number_chosen,
-    )
-    db.session.add(new_choice)
-    db.session.commit()
-
+    try:
+        requests.post(f"{SERVER_URL}/user_add_choice" , json=dict({"username":username,"game_id":game_id,"round_num":round_num,"number_chosen":number_chosen}))   
+    except Exception as E:
+        print(E)
 
 def user_valid_round_end(username, game_id, round_num):
-    res = (requests.get(f"{SERVER_URL}/user_invalid_game_play" , params=dict({"username":username,"game_id":game_id,"round_num":round_num}))).json()
-    return res['flag']
-
+    try:
+        res = (requests.get(f"{SERVER_URL}/user_valid_round_end" , params=dict({"username":username,"game_id":game_id,"round_num":round_num}))).json()
+        return bool(res['flag'])
+    except Exception as E:
+        return False
 
 def admin_start_game(game_id):
-    new_game = Game(game_id=game_id, round_num=1, game_end=False)
-    db.session.add(new_game)
-    db.session.commit()
-
+    try:
+        requests.post(f"{SERVER_URL}/admin_start_game" , json=dict({"game_id":game_id}))
+    except Exception as E:
+        print(E)
 
 def admin_end_game(game_id):
     try:
-        game = Game.query.filter_by(game_id=game_id).first()
-        game.game_end = True
-        db.session.commit()
-    except:
-        return
-
+        requests.post(f"{SERVER_URL}/admin_end_game" , json=dict({"game_id":game_id}))
+    except Exception as E:
+        print(E)
 
 def admin_invalid_round_end(game_id, round_num):
-    return (
-        Game.query.filter_by(
-            game_id=game_id, round_num=round_num, game_end=False
-        ).first()
-        is None
-    )
+    try:
+        res = (requests.get(f"{SERVER_URL}/admin_invalid_round_end" , params=dict({"game_id":game_id,"round_num":round_num}))).json()
+        return bool(res['flag'])
+    except Exception as E:
+        return True
 
 
 def admin_end_round(game_id, round_num):
     try:
-        game = Game.query.filter_by(game_id=game_id).first()
-
-        if round_num == NUM_ROUNDS:
-            game.game_end = True
-            db.session.commit()
-        else:
-            game.round_num = round_num + 1
-            db.session.commit()
-
-    except:
-        return
-
+        requests.post(f"{SERVER_URL}/admin_end_round" , json=dict({"game_id":game_id,"round_num":round_num}))
+    except Exception as E:
+        print(E)
 
 def get_result(game_id, round_num, reviewing):
-
-    freq = dict()
-    choices = Choice.query.filter_by(game_id=game_id, round_num=round_num).all()
-    for choice in choices:
-        freq[choice.number_chosen] = freq.get(choice.number_chosen, 0) + 1
-
-    if not reviewing:
-        for choice in choices:
-
-            username = choice.username
-            number_chosen = choice.number_chosen
-            f = freq[number_chosen]
-
-            user = UserSession.query.filter_by(
-                username=username, game_id=game_id
-            ).first()
-            user.points = user.points + ((float(number_chosen)) / (float(f)))
-            db.session.commit()
-
-    frequency = dict()
-
-    for i in range(1, 101):
-        frequency[i] = freq.get(i, 0) + random.randint(0, 10)
-
-    userlist = UserSession.query.filter_by(game_id=game_id).all()
-    ranklist = []
-
-    for user in userlist:
-        ranklist.append(user.__dict__)
-
-    ranklist = sorted(ranklist, key=lambda d: d["points"], reverse=True)
-
-    return ranklist[:10], frequency
+    try:
+        res = (requests.get(f"{SERVER_URL}/get_result" , params=dict({"game_id":game_id,"round_num":round_num,"reviewing":reviewing}))).json()
+        return res['ranklist'] , res['frequency']
+    except Exception as E:
+        print(E)
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -350,6 +304,8 @@ def admin_result(game_id, round_num):
 
     reviewing = admin_invalid_round_end(game_id, round_num)
 
+    print("in user result reviewing = ",reviewing)
+    
     if not reviewing:
         admin_end_round(game_id, round_num)
 
