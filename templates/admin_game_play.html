@@ -1,107 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Greed Control!</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+      crossorigin="anonymous"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bowlby+One+SC&family=Montserrat&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        body{
-            background-image: linear-gradient(to left, rgb(171, 21, 99) ,rgb(105, 23, 183));
-            font-family: "Titilium Web";
-           font-size: large;
-           /* color: white; */
-          
-        }
-        .main{
-            /* min-width: 200px; */
-     margin-left: 15%;
-     
-     /* margin: auto; */
-     margin-right: 10%;
-     padding: 30px;
-     margin-top: 2%;
-    
-     padding: auto;
-     
-     font-size: 2rem;
-     min-width: 250px;
-     text-align: center;
-     
-     /* border: 3px solid brown; */
-     border-radius: 5px;
-    /* box-shadow: 10px 10px 5px rgb(213, 52, 200); */
-     background-color: rgb(98, 21, 98);
-     color:grey;
-        }
-        .hdng h1{
-             font-weight: bolder;
-             color: rgb(57, 0, 57);
-             
-        }
-
-        .foot{
-            width: 30%;
-           margin: auto;
-           margin-top: 10%;
-          
-        }
-        .hdng{
-           
-            width: 30%;
-          
-            margin: auto;
-            margin-top: 8%;
-            margin-left: 38%;
-     
-     /* margin: auto; */
-     margin-right: 40%;
-           
-        }
-        .hdng h1{
-            font-size: 4rem;
-        }
-        .btnn button{
-            max-height: 150px;
-        }
-        
-
+      body {
+        background-color: #46178f;
+        font-family: "Bowlby One SC", cursive;
+        color: white;
+      }
+      .container {
+        font-family: "Montserrat", sans-serif;
+      }
     </style>
-</head>
-<body>
-    <script type="text/javascript" src="{{ url_for('static', filename='admin_game_play.js') }}"></script>
-    <div class="hdng">
-        <h1>Hey Gamers</h1>
-    </div>
-    <div class="main">
-        
-    <div>
-        
-        Game ID : 
-        <div id="game_id">{{current_game.game_id}}</div> <br/>
-        Round Num : 
-        <div id="round_num">{{current_game.round_num}}</div> <br/>
-    </div>
-   
-    
-    <form action="/admin/round_end" method="POST">
-        <input type="hidden" name="game_id" value='{{current_game.game_id}}'/>
-        <input type="hidden" name="round_num" value='{{current_game.round_num}}'/>
-        <div class="btnn">
-        <button type="submit" class="btn btn-success">End Round and View Result</button>
-        </div>
-    </form>
+  </head>
+  <body>
+    <script
+      type="text/javascript"
+      src="{{ url_for('static', filename='admin_game_play.js') }}"
+    ></script>
+
+    <div class="mt-5 d-flex align-items-center justify-content-center">
+      <h1 class="display-4 text-light text-center">
+        Choose Your Number <br />
+        Carefully
+      </h1>
     </div>
 
-    <footer>
-        <div class="foot">
-            @copyright | terms 
+    <div class="container text-center fw-bolder">
+      <div>
+        <h5 class="fw-bolder mt-4">Game ID</h5>
+        <div id="game_id">{{current_game.game_id}}</div>
+        
+        <h5 class="fw-bolder mt-3">Round Number</h5>
+        <div id="round_num">{{current_game.round_num}}</div>
+        <br />
+      </div>
+
+      <form action="/admin/round_end" method="POST">
+        <input type="hidden" name="game_id" value="{{current_game.game_id}}" />
+        <input
+          type="hidden"
+          name="round_num"
+          value="{{current_game.round_num}}"
+        />
+        <div class="btnn">
+          <button type="submit" class="btn btn-success">
+            End Round and View Result
+          </button>
         </div>
-    </footer>
-    
-</body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+      </form>
+    </div>
+  </body>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+    crossorigin="anonymous"
+  ></script>
 </html>

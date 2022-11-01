@@ -1,246 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Results!</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
+      crossorigin="anonymous"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bowlby+One+SC&family=Montserrat&display=swap"
+      rel="stylesheet"
+    />
     <style>
- 
-        body{
-    
-            /* background-color: blueviolet; */
-           font-family: "Titilium Web";
-           font-size: large;
-           background-image: linear-gradient(to left, rgb(171, 21, 99) ,rgb(105, 23, 183));
-           font-size: 1.8vw;
-           /* color: white; */
-          
-        }
-        .main{
-          width: 100%;
-          margin: auto;
-         
-          margin-bottom: 2%;
-          
-          background-color: rgb(98, 21, 98);
-          background-image: linear-gradient(to left, rgb(171, 21, 99) ,rgb(105, 23, 183));
-          padding-left: 10%;
-          padding-top: 10px;
-          color: white;
-          padding-bottom: 10px;
-          border-radius: 5px;
-          font-size: 2rem;
-
-        }
-        .game{
-           
-           width: 30%;
-           margin-left: 28%;
-        }
-        .result{
-            width: 80%;
-          margin: auto;
-          margin-top: 2%;
-          margin-bottom: 2%;
-          
-          padding-left: 3%;
-          padding-top: 10px;
-          padding-bottom: 10px;
-          border-radius: 5px;
-          font-size: 2rem;
-        }
-        .result button{
-            width: 20%;
-            margin: auto;
-           margin-left: 30%;
-        }
-        .zoom{
-            transition: transform .8s;
-        }
-        .zoom:hover {
-  transform: scale(1.1); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
-  background-color: pink;
-} 
-        ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: #eeeeee;
-  border: 2px solid rgb(55, 55, 154);
-  border-radius: 5px;
-}
-
-li {
-  float: left;
-  display: block;
-  width: 30%;
-}
-
-
-li h2 {
-  display: block;
-  color: rgb(33, 46, 138);
-  text-align: center;
-  padding: 16px;
-  text-decoration: none;
-  font-size: 2.5vw; 
-
-}
-
-.foot{
-            width: 30%;
-           margin: auto;
-           margin-top: 10%;
-          
-        }
-
-
+      body {
+        background-color: #46178f;
+        font-family: "Bowlby One SC", cursive;
+        color: white;
+      }
+      .container {
+        font-family: "Montserrat", sans-serif;
+      }
     </style>
-</head>
-<body>
-    <div class="main">
-        
-    Showing Result for :<br/><br/>
-
-    <div class="game">
-        Game ID : 
-        <div id="game_id"><h4>{{game_id}}</h4></div> <br/>
-        Round Num : 
-        <div id="round_num"><h4>{{round_num}}</h4></div> <br/>
+  </head>
+  <body>
+    <div class="mt-5 d-flex align-items-center justify-content-center">
+      <h1 class="display-4 text-light text-center">SCORES</h1>
     </div>
-</div>
-   
+    <div class="container text-center">
+      <div>
+        <h5 class="fw-bolder mt-4">Game ID</h5>
+        <div id="game_id">{{game_id}}</div>
+
+        <h5 class="fw-bolder mt-3">Round Number</h5>
+        <div id="round_num">{{round_num}}</div>
+        <br />
+      </div>
+    </div>
+
     <div class="result">
+      {% for user in result %}
+      <ul class="zoom">
+        <li><h2>{{user.username}}</h2></li>
+        <li><h2>{{user.email}}</h2></li>
+        <li><h2>{{user.points}}</h2></li>
+      </ul>
+      {% endfor %}
 
-      
-        {% for user in result %}
-        <ul class="zoom">
-            <li><h2>{{user.username}}</h2></li>
-            <li><h2>{{user.email}}</h2> </li>
-            <li><h2>{{user.points}}</h2></li>
-        </ul>
-       {% endfor %}
-    
+      <br />
+      <div>
+        <canvas
+          id="myChart"
+          style="max-width: 1000px; max-height: 1000px"
+        ></canvas>
+      </div>
+      <br />
 
-    <br/>
-        <div>
-            <canvas id="myChart" style="max-width:1000px;max-height:1000px;"></canvas>
-        </div>
-    <br/>
-
-    {% if is_last_round == true %}
-        <form action='/clear_session'>
-            <button type="submit" class="btn btn-success">End Game</button>
-        </form>
-    {% else %}
-        <form action='/admin/game_play' method="POST">
-            <button type="submit" class="btn btn-success">Continue to next round</button>
-        </form>
-    {% endif %}
-
-</div>
-<footer>
-    <div class="foot">
-        @copyright | terms 
+      {% if is_last_round == true %}
+      <form action="/clear_session">
+        <button type="submit" class="btn btn-success">End Game</button>
+      </form>
+      {% else %}
+      <form action="/admin/game_play" method="POST">
+        <button type="submit" class="btn btn-success">
+          Continue to next round
+        </button>
+      </form>
+      {% endif %}
     </div>
-</footer>
-
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.js"></script>
     <script>
+      var frequency_dev = {
+        1: 4,
+        2: 10,
+        3: 2,
+        4: 3,
+        5: 9,
+      };
 
-        var frequency_dev = {
-            1 : 4,
-            2 : 10,
-            3 : 2,
-            4 : 3,
-            5 : 9
+      var frequency = JSON.parse("{{ frequency|tojson}}");
+
+      var numbers_chosen = [];
+      var points_earned = [];
+
+      var sum = 0,
+        min_points = 100000,
+        max_points = 0;
+      var len = 0;
+
+      for (number_chosen in frequency) {
+        var freq = parseInt(frequency[number_chosen], 10);
+
+        if (freq == 0) {
+          numbers_chosen.push(number_chosen);
+          points_earned.push(0);
+          continue;
         }
 
-        var frequency = JSON.parse('{{ frequency|tojson}}')
+        numbers_chosen.push(number_chosen);
+        points_earned.push(parseFloat(number_chosen) / parseFloat(freq));
 
-        var numbers_chosen = []
-        var points_earned = []
+        min_points = Math.min(min_points, points_earned.at(-1));
+        max_points = Math.max(max_points, points_earned.at(-1));
+        sum += points_earned.at(-1);
+        len += 1;
+      }
 
-        var sum = 0 , min_points = 100000 , max_points = 0
-        var len = 0
+      average_points = sum / len;
 
-        for(number_chosen in frequency)
-        {
-            var freq = parseInt(frequency[number_chosen],10)
+      new Chart("myChart", {
+        type: "bar",
+        data: {
+          labels: numbers_chosen,
+          datasets: [
+            {
+              backgroundColor: function (context) {
+                const index = context.dataIndex;
+                const value = context.dataset.data[index];
 
-            if(freq==0){
-                numbers_chosen.push(number_chosen)
-                points_earned.push(0)
-                continue;
-            }
-
-            numbers_chosen.push(number_chosen)
-            points_earned.push((parseFloat(number_chosen))/(parseFloat(freq)))
-
-            min_points = Math.min(min_points , points_earned.at(-1))
-            max_points = Math.max(max_points , points_earned.at(-1))
-            sum += points_earned.at(-1)
-            len+=1
-        }
-        
-        average_points = sum/len;
-
-
-        new Chart("myChart", {
-            type: "bar",
-            data: {
-                labels : numbers_chosen,
-                datasets : [
-                    {
-                        backgroundColor : function(context) {
-                            const index = context.dataIndex;
-                            const value = context.dataset.data[index];
-
-                            if(value==max_points){
-                                return "#8CF170";
-                            }
-                            else if(value==min_points){
-                                return "#EB7126";
-                            }
-                            else if(value>average_points){
-                                return "#EDFB77"
-                            }
-                            else{
-                                return "#F4C942"
-                            }
-                        },
-                        data : points_earned
-                    }
-                ]
+                if (value == max_points) {
+                  return "#8CF170";
+                } else if (value == min_points) {
+                  return "#EB7126";
+                } else if (value > average_points) {
+                  return "#EDFB77";
+                } else {
+                  return "#F4C942";
+                }
+              },
+              data: points_earned,
             },
-            options:{
-                plugins: {
-                    legend: {
-                      display: false
-                    }
-                },
-                scales: {
-                    x: {
-                        title: {
-                          display: true,
-                          text: 'Number Chosen'
-                        }
-                    },
-                    y: {
-                      title: {
-                        display: true,
-                        text: 'Points Earned'
-                      }
-                    }
-                }  
-            }
-        });
+          ],
+        },
+        options: {
+          plugins: {
+            legend: {
+              display: false,
+            },
+          },
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: "Number Chosen",
+              },
+            },
+            y: {
+              title: {
+                display: true,
+                text: "Points Earned",
+              },
+            },
+          },
+        },
+      });
     </script>
-</body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+  </body>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+    crossorigin="anonymous"
+  ></script>
 </html>
