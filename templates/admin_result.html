@@ -84,7 +84,7 @@
         </table>
         {% endfor %}
 
-        <div class="d-flex justify-content-center mb-5 ">
+        <div class="d-flex justify-content-center m-5 ">
           <canvas id="scores"></canvas>
         </div>
 
@@ -144,6 +144,9 @@
 
       average_points = sum / len;
 
+      console.log(min_points, max_points , average_points)
+      var eps = 0.0001
+
       const config = {
         type: "bar",
         data: {
@@ -154,10 +157,13 @@
                 const index = context.dataIndex;
                 const value = context.dataset.data[index];
 
-                if (value == max_points) {
+                var diff_max = Math.abs(value - max_points)
+                var diff_min = Math.abs(value - min_points)
+
+                if (diff_max<eps) {
                   return "#8CF170";
-                } else if (value == min_points) {
-                  return "#EB7126";
+                } else if (diff_min<eps) {
+                  return "#F52714";
                 } else if (value > average_points) {
                   return "#EDFB77";
                 } else {
