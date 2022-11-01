@@ -1,21 +1,20 @@
 from pickle import TRUE
-from unittest import result
 from flask import Flask, render_template, session, request, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 from flask_session import Session
 from dotenv import load_dotenv
-import os
+from os import getenv
 import random
 
 load_dotenv()
 
-SECRET_KEY = os.getenv("SECRET_KEY")
-ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
-ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
-PORT = os.getenv("PORT")
-DEV = os.getenv("DEV")
-DATABASE_URI = os.getenv("DATABASE_URI")
+SECRET_KEY = getenv("SECRET_KEY")
+ADMIN_USERNAME = getenv("ADMIN_USERNAME")
+ADMIN_PASSWORD = getenv("ADMIN_PASSWORD")
+PORT = getenv("PORT")
+DEV = getenv("DEV")
+DATABASE_URI = getenv("DATABASE_URI")
 NUM_ROUNDS = 5
 
 app = Flask(__name__)
@@ -31,7 +30,7 @@ app.secret_key = SECRET_KEY
 db = SQLAlchemy(app)
 
 app.config["SESSION_PERMANENT"] = TRUE
-app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=5)
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=30)
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
