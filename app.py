@@ -1,4 +1,3 @@
-from pickle import TRUE
 from flask import Flask, jsonify, render_template, session, request, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
@@ -18,13 +17,14 @@ NUM_ROUNDS = int(getenv("NUM_ROUNDS"))
 PORT = getenv("PORT")
 SECRET_KEY = getenv("SECRET_KEY")
 SERVER_URL = getenv("SERVER_URL")
+RANGE = int(getenv("RANGE"))
 
 app = Flask(__name__)
 app.debug = DEV == "True"
 
 app.secret_key = SECRET_KEY
 
-app.config["SESSION_PERMANENT"] = TRUE
+app.config["SESSION_PERMANENT"] = True
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=30)
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
@@ -152,12 +152,18 @@ def user_game_play():
         return redirect("/clear_session")
 
     if request.method == "POST":
-        number_chosen = request.form["number_chosen"]
+        try:
+            number_chosen = int(request.form["number_chosen"])
+        except:
+            return render_template("user_game_play.html", game_id=game_id, round_num=round_num,range=RANGE)
+
+        if (number_chosen<1 or number_chosen>RANGE):
+            return render_template("user_game_play.html", game_id=game_id, round_num=round_num,range=RANGE)
 
         user_add_choice(username, game_id, round_num, number_chosen)
         return redirect(f"/user/round_end")
 
-    return render_template("user_game_play.html", game_id=game_id, round_num=round_num)
+    return render_template("user_game_play.html", game_id=game_id, round_num=round_num,range=RANGE)
 
 
 @app.route("/user/round_end", methods=["GET", "POST"])
