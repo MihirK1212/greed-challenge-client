@@ -86,16 +86,17 @@
 
         <div class="d-flex justify-content-center m-5 ">
           <canvas id="scores"></canvas>
+          <div class="m-4 p-1"></div>
         </div>
 
         {% if is_last_round == true %}
-        <form action="/clear_session">
+        <form action="/clear_session" class="mb-5">
           <button type="submit" class="btn btn-success fw-bolder">
             End Game
           </button>
         </form>
         {% else %}
-        <form action="/admin/game_play" method="POST">
+        <form action="/admin/game_play" method="POST" class="mb-5">
           <button type="submit" class="btn btn-success fw-bolder">
             Continue to Next Round
           </button>
@@ -106,7 +107,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.js"></script>
     <script>
-      var frequency = {
+      var frequency_dev = {
         1: 4,
         2: 10,
         3: 2,
@@ -194,7 +195,7 @@
                 color: "white",
               },
               ticks: {
-                color: "white",
+                color: "white"
               },
             },
 
