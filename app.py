@@ -169,7 +169,6 @@ def user_game_play():
 @app.route("/user/round_end", methods=["GET", "POST"])
 def user_round_end():
 
-    print("in user round end:")
 
     current_user = session.get("current_user", {"username": "", "email": ""})
     current_game = session.get(
@@ -180,25 +179,18 @@ def user_round_end():
     game_id = current_game["game_id"]
     round_num = current_game["round_num"]
 
-    print("username , game_id , round_num",username , game_id , round_num)
-
     if game_id == -1 or round_num == -1:
-        print("Clearing session due to -1 error")
         return redirect("/clear_session")
 
     is_last_round = round_num == NUM_ROUNDS
 
-    print("is_last_round",is_last_round)
 
     if request.method == "POST":
         
-        print("got post request")
 
         if round_num == NUM_ROUNDS:
-            print("clear due to round_num == NUM_ROUNDS")
             return redirect("/clear_session")
         elif user_valid_round_end(username, game_id, round_num):
-            print("user valud round end is true")
             session["current_game"] = {
                 "game_id": game_id,
                 "round_num": round_num + 1,
@@ -206,10 +198,8 @@ def user_round_end():
             }
             return redirect("/user/game_play")
         else:
-            print("Flash wait current round")
             flash("Please wait for current round to end!")
 
-    print("returning render template ",game_id,round_num,is_last_round)
 
     return render_template(
         "user_round_end.html",
@@ -311,7 +301,6 @@ def andmin_round_end():
                 current_game["game_id"] == game_id
                 and current_game["round_num"] == round_num
             ):
-                print("redirecting to result")
                 return redirect(f"/admin/result/{game_id}/{round_num}")
 
         except Exception as E:
@@ -325,8 +314,6 @@ def admin_result(game_id, round_num):
 
     reviewing = admin_invalid_round_end(game_id, round_num)
 
-    print("in user result reviewing = ",reviewing)
-    
     if not reviewing:
         admin_end_round(game_id, round_num)
 
